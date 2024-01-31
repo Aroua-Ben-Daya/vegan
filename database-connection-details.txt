@@ -1,0 +1,23 @@
+identifier: RDS primary instance 
+Master username : admin
+password :VeganStudio
+Burstable classes (includes t classes)
+
+
+
+
+DB Endpoint
+vegan-studio.c7g2wcc8wrj8.us-east-1.rds.amazonaws.com
+DB name
+veganstudio
+user name to connect to the database:
+admin 
+password:
+VeganStudio
+
+identifier: RDS primary instance 
+Master username : admin
+password :VeganStudio
+Burstable classes (includes t classes)
+
+
