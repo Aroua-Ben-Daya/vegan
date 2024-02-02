@@ -198,3 +198,19 @@ footer p{text-align:center;color:#3d3d3d;font-size:23px;font-family: 'poppinsreg
 .recipe.googey .recipe-box .btn{border:1px solid #4e3425;}
 .recipe.googey .recipe-box h3{color:#4e3425;font-family: 'poppinsbold';font-size:23px;margin-bottom:20px;}
 .recipe.googey{background-image:url('../images/customer-recipe/gooey-chocolate-bg.jpg');background-position:left top;height:597px;}
+.recipe-card {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.recipe-card h4 {
+    margin-bottom: 10px;
+}
+
+.recipe-card p {
+    color: #888;
+    font-style: italic;
+}

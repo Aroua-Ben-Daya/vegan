@@ -1,114 +1,80 @@
-$(document).ready(function () {
-  //Load data
-  loadContest();
-  //send data
+// Function to submit the form data using a POST request
+function submitForm() {
+  const name = document.getElementById('name').value;
+  const email = document.getElementById('email').value;
+  const recipeName = document.getElementById('recipe_name').value;
+  const ingredients = document.getElementById('ingredients').value;
+  const method = document.getElementById('method').value; // Fixed typo in method
+  const region = document.getElementById('region').value;
+
+  const formData = {
+      name: name,
+      email: email,
+      recipe_name: recipeName,
+      ingredients: ingredients,
+      methode: method, // Fixed typo in methode
+      region: region
+  };
+
+  fetch('http://webServer-LB-289644287.us-east-1.elb.amazonaws.com:8080/recipe', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+  })
+  .then(response => response.json())
+  .then(data => {
+      // Handle success
+      console.log('Success:', data);
+      document.getElementById('contest-form').reset(); // Reset the form
+      alert('Recipe submitted successfully!');
+  })
+  .catch((error) => {
+      // Handle error
+      console.error('Error:', error);
+      alert('Error submitting recipe. Please try again.');
+  });
+}
+
+  // Function to get recipes using a GET request
+function getRecipes() {
+  fetch('http://webServer-LB-289644287.us-east-1.elb.amazonaws.com:8080/recipe')
+  .then(response => response.json())
+  .then(data => {
+      // Handle success
+      console.log('Recipes:', data);
+      // Update the UI to display the recipes
+      // You can customize this part based on your UI requirements
+      
+      // Assuming you have a div with id 'contest-items' in your HTML file
+const contestItems = document.getElementById('contest-items');
+
+// Iterate over each recipe and create a card-like display
+data.forEach(recipe => {
+    const recipeCard = document.createElement('div');
+    recipeCard.classList.add('recipe-card');
+
+    const recipeTitle = document.createElement('h4');
+    recipeTitle.textContent = recipe.recipe_name;
+
+    const recipeDetails = document.createElement('p');
+    recipeDetails.textContent = `${recipe.region} - ${recipe.method}`;
+
+    recipeCard.appendChild(recipeTitle);
+    recipeCard.appendChild(recipeDetails);
+
+    contestItems.appendChild(recipeCard);
 });
-function loadContest() {
-  var settings = {
-    async: true,
-    crossDomain: true,
-    url: "/action.php?action=contest",
-    method: "GET",
-    dataType: "JSON",
-    headers: {
-      "content-type": "application/json",
-      "cache-control": "no-cache",
-    },
-  };
-  $("#contest-items").html("");
-  $.ajax(settings).done(function (response) {
-    // console.log(response);
-    $.map(response, function (row, index) {
-      // console.log(row);
-      $template =
-        '<section class="contest-wrap clearfix">' +
-        '<ul class="clearfix"><li>NAME:<b>' +
-        row.name +
-        "</b></li><li>REGION:<b>" +
-        row.region +
-        "</b></li><li>RECIPE NAME:<b>" +
-        row.recipe_name +
-        "</b></li></ul>" +
-        '<aside class="col">' +
-        "<h3>INGREDIENTS</h3>" +
-        "<p>" +
-        row.ingredients +
-        "</p>" +
-        "</aside>" +
-        '<aside class="col">' +
-        "<h3>METHOD</h3>" +
-        "<p>" +
-        row.method +
-        "</p>" +
-        "</aside>" +
-        "</section>";
 
-      $("#contest-items").append($template);
-    });
+     
+  })
+  .catch((error) => {
+      // Handle error
+      console.error('Error:', error);
+      alert('Error fetching recipes. Please try again.');
   });
 }
 
-function submitForm(e) {
-  var validForm = $("#contest-form")[0].checkValidity();
-  // e.preventDefault();
-  // console.log(validForm);
-  var name = $("#name").val();
-  var email = $("#email").val();
-  var recipe_name = $("#recipe_name").val();
-  var ingredients = $("#ingredients").val();
-  var method = $("#method").val();
-  var region = $("#region").val();
-
-  $("#name,#email,#recipe_name,#ingredients,#method,#region").val("");
-
-  var form = new FormData();
-
-  form.append("name", name);
-  form.append("email", email);
-  form.append("recipe_name", recipe_name);
-  form.append("ingredients", ingredients);
-  form.append("method", method);
-  form.append("region", region);
-  form.append("action", "contest");
-
-  var settings = {
-    async: true,
-    crossDomain: true,
-    url: "/action.php",
-    method: "POST",
-    headers: {
-      "cache-control": "no-cache",
-      "postman-token": "ffd8155a-836b-fa50-3257-bca97d8fb95a",
-    },
-    processData: false,
-    contentType: false,
-    mimeType: "multipart/form-data",
-    data: form,
-    dataType: "JSON",
-  };
-
-  $.ajax(settings).done(function (response) {
-    // console.log(response);
-    $("#name,#email,#recipe_name,#ingredients,#method,#region").val("");
-    showalert(
-      response.message,
-      response.status === "error" ? danger : response.status
-    );
-    loadContest();
-  });
-}
-
-function showalert(message, alerttype) {
-  $("#alert_placeholder").append(
-    '<div id="alertdiv" class="alert alert-' +
-      alerttype +
-      '" role="alert"><a class="close" data-dismiss="alert">×</a><span>' +
-      message +
-      "</span></div>"
-  );
-
-  setTimeout(function () {
-    // this will automatically close the alert and remove this if the users doesnt close it in 5 secs
-    $("#alertdiv").remove();
-  }, 5000);
-}
+// Initial call to get recipes when the page loads
+getRecipes();
